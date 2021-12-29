@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace SqlServer.Plugin;
 internal class AugmentationTranslator : IMethodCallTranslator
@@ -17,6 +18,9 @@ internal class AugmentationTranslator : IMethodCallTranslator
             case nameof(DbFunctionsExtensions.Augment):
                 var argument = arguments[1];
                 return new SqlBinaryExpression(ExpressionType.Add, argument, new SqlConstantExpression(Expression.Constant(1), null), argument.Type, null);
+            case nameof(DbFunctionsExtensions.RowNumber):
+                var ordeyBy = arguments[1];
+                return new RowNumberExpression(null, new OrderingExpression[] { new OrderingExpression(ordeyBy, true) }, RelationalTypeMapping.NullMapping);
             default:
                 return null;
         }

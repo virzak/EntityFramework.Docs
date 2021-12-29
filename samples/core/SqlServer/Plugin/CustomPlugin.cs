@@ -21,6 +21,9 @@ public class CustomPlugin
 
             var simple = context.Blogs.Select(b => EF.Functions.Augment(b.BlogId)).First();
             var withCast = context.Blogs.Select(b => EF.Functions.Augment((long)b.BlogId)).First();
+
+            var simpleRowNumber = context.Blogs.Select(b => EF.Functions.RowNumber(b.BlogId)).First();
+            var simpleRowNumberWithCast = context.Blogs.Select(b => EF.Functions.RowNumber((long)b.BlogId)).First();
         }
     }
 }
