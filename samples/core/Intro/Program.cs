@@ -22,6 +22,60 @@ namespace Intro
                     .OrderBy(b => b.Url)
                     .ToList();
             }
+
+            // Anonymous: OK
+            using (var db = new BloggingContext())
+            {
+                var blogs = db.Blogs
+                    .Select(b => new { Original = b, Custom = b.BlogId.ToString() + b.Url })
+                    .OrderBy(b => b.Custom)
+                    .ToList();
+            }
+
+            // Class: OK
+            using (var db = new BloggingContext())
+            {
+                var blogs = db.Blogs
+                    .Select(b => new Projection { Original = b, Custom = b.BlogId.ToString() + b.Url })
+                    .OrderBy(b => b.Custom)
+                    .ToList();
+            }
+
+            // Record: OK
+            using (var db = new BloggingContext())
+            {
+                var q = db.Blogs
+                    .Select(b => new ProjectionRecord { Original = b, Custom = b.BlogId.ToString() + b.Url })
+                    .OrderBy(b => b.Custom);
+                var blogs = q
+                    .ToList();
+            }
+
+            // Positional record, no OrderBy: OK
+            using (var db = new BloggingContext())
+            {
+                var blogs = db.Blogs
+                    .Select(b => new ProjectionPositionalRecord(b, b.BlogId.ToString() + b.Url))
+                    .ToList();
+            }
+
+            // Positional record, with OrderBy: crashes
+            using (var db = new BloggingContext())
+            {
+                var blogs = db.Blogs
+                    .Select(b => new ProjectionPositionalRecord(b, b.BlogId.ToString() + b.Url))
+                    .OrderBy(b => b.Custom)
+                    .ToList();
+            }
+
+            // Class with private constructor, with OrderBy: crashes
+            using (var db = new BloggingContext())
+            {
+                var blogs = db.Blogs
+                    .Select(b => new ProjectionWithPrivateConstructor(b, b.BlogId.ToString() + b.Url))
+                    .OrderBy(b => b.Custom)
+                    .ToList();
+            }
             #endregion
 
             #region SavingData
@@ -33,5 +87,35 @@ namespace Intro
             }
             #endregion
         }
+    }
+
+    class Projection
+    {
+        public Blog Original { get; set; }
+        public string Custom { get; set; }
+    }
+
+    class ProjectionWithPrivateConstructor
+    {
+        private ProjectionWithPrivateConstructor()
+        {
+        }
+
+        public ProjectionWithPrivateConstructor(Blog original, string custom)
+        {
+            Original = original;
+            Custom = custom;
+        }
+
+        public Blog Original { get; set; }
+        public string Custom { get; set; }
+    }
+
+    record ProjectionPositionalRecord(Blog Original, string Custom);
+
+    record ProjectionRecord
+    {
+        public Blog Original { get; set; }
+        public string Custom { get; set; }
     }
 }
