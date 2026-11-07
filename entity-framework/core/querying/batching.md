@@ -51,7 +51,7 @@ The element type you ask for must match the element type of the query at that po
 
 [!code-csharp[Main](../../../samples/core/Querying/Batching/Program.cs?name=StreamingResults)]
 
-Requesting a result set moves the underlying data reader forward. An enumerable returned for an earlier result set is therefore invalidated as soon as a later result set is requested, and enumerating it afterwards throws. Consume each streamed result set completely before asking for the next one.
+Requesting a result set moves the underlying data reader forward. An enumerable returned for an earlier result set is therefore invalidated as soon as a later result set is requested, and enumerating it afterwards throws. Consume each streamed result set completely before asking for the next one. Result sets cannot be consumed in parallel or interleaved, because a batch is read through a single data reader. If several result sets need to be processed concurrently, materialize them with `NextAsListAsync` first and then work on the lists in parallel.
 
 The reader holds the database connection until it is disposed. Dispose it as soon as the required results have been consumed, as in the samples above, which use `using` declarations.
 
