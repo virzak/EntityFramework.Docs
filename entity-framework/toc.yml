@@ -264,6 +264,8 @@
             href: core/querying/related-data/serialization.md
       - name: Split queries
         href: core/querying/single-split-queries.md
+      - name: Query batching
+        href: core/querying/batching.md
       - name: Complex query operators
         href: core/querying/complex-query-operators.md
       - name: Pagination

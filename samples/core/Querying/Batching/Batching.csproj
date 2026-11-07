@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net12.0</TargetFramework>
+    <RootNamespace>EFQuerying.Batching</RootNamespace>
+    <AssemblyName>EFQuerying.Batching</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- TODO(release): use the first package version that ships query batching -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="12.0.0-preview.1" />
+  </ItemGroup>
+
+</Project>
